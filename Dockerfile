@@ -1,21 +1,14 @@
 FROM thyrlian/android-sdk:2.6
 
-ENTRYPOINT ["bash"]
+ENV APP_DIR /src/app/
 
-# We need permision to the /opt/android-sdk before we define /src/app as our working directory
-RUN groupadd projects && useradd --no-create-home -g projects projects && \
-  chown -R projects:projects /opt
+RUN mkdir -p $APP_DIR
 
-WORKDIR /src/app
+WORKDIR $APP_DIR
 
 COPY . .
 
-RUN \
-  chown -R projects:projects /src/app && \
-  mkdir -p /home/projects && \
-  chown -R projects:projects /home/projects
-
-USER projects
+ENTRYPOINT ["bash"]
 
 # If we don't exclude the tests, they get run during the build
 # We want all the dependencies installed (and even an initial build)
